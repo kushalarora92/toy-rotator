@@ -25,6 +25,8 @@ module.exports = {
       googleServicesFile: process.env.GOOGLE_SERVICE_INFO_PLIST || './GoogleService-Info.plist',
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
+        NSCameraUsageDescription: 'ToyRotator uses the camera to scan toys and analyze play spaces.',
+        NSPhotoLibraryUsageDescription: 'ToyRotator uses your photo library to select toy photos and play space images.',
       },
       usesAppleSignIn: true,
     },
@@ -48,6 +50,21 @@ module.exports = {
       '@react-native-firebase/app',
       '@react-native-google-signin/google-signin',
       'expo-apple-authentication',
+      [
+        'expo-image-picker',
+        {
+          photosPermission: 'ToyRotator uses your photo library to select toy photos and play space images.',
+          cameraPermission: 'ToyRotator uses the camera to scan toys and analyze play spaces.',
+        },
+      ],
+      [
+        'expo-notifications',
+        {
+          icon: './assets/images/icon.png',
+          color: '#0077e6',
+        },
+      ],
+      'react-native-purchases',
       [
         'expo-build-properties',
         {
