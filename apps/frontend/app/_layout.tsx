@@ -12,6 +12,7 @@ import { config } from '../gluestack-ui.config';
 import { useColorScheme } from '@/components/useColorScheme';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { ToyRotatorProvider } from '@/context/ToyRotatorContext';
+import { SubscriptionProvider } from '@/context/SubscriptionContext';
 import { useVersionCheck } from '@/hooks/useVersionCheck';
 import Colors from '@/constants/Colors';
 import WebContainer from '@/components/WebContainer';
@@ -123,6 +124,30 @@ function RootLayoutNav() {
             }} 
           />
           <Stack.Screen 
+            name="analyze-space" 
+            options={{ 
+              title: 'Space Analysis',
+              headerShown: true,
+              presentation: 'card',
+            }} 
+          />
+          <Stack.Screen 
+            name="scan-toy" 
+            options={{ 
+              title: 'Scan Toy',
+              headerShown: true,
+              presentation: 'card',
+            }} 
+          />
+          <Stack.Screen 
+            name="paywall" 
+            options={{ 
+              title: 'Premium',
+              headerShown: false,
+              presentation: 'modal',
+            }} 
+          />
+          <Stack.Screen 
             name="privacy" 
             options={{ 
               title: 'Privacy Policy',
@@ -206,9 +231,11 @@ function AppContent() {
   // Normal app flow
   return (
     <AuthProvider>
-      <ToyRotatorProvider>
-        <RootLayoutNav />
-      </ToyRotatorProvider>
+      <SubscriptionProvider>
+        <ToyRotatorProvider>
+          <RootLayoutNav />
+        </ToyRotatorProvider>
+      </SubscriptionProvider>
     </AuthProvider>
   );
 }

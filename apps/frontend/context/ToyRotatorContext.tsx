@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useFirebaseFunctions } from '@/hooks/useFirebaseFunctions';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
+import { useSubscription } from '@/context/SubscriptionContext';
 import {
   ChildProfile,
   Toy,
@@ -77,6 +79,7 @@ export const ToyRotatorProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     logFeedback,
     getHousehold,
   } = useFirebaseFunctions();
+  const { scheduleRotationReminder } = usePushNotifications();
 
   // State
   const [childProfiles, setChildProfiles] = useState<ChildProfile[]>([]);
@@ -94,7 +97,9 @@ export const ToyRotatorProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [householdLoading, setHouseholdLoading] = useState(false);
 
   const subscription = userProfile?.subscriptionStatus || null;
-  const isPaidUser = subscription?.tier === 'trial' || subscription?.tier === 'paid';
+  // isPaidUser is true if RevenueCat reports premium OR Firestore has trial/paid tier
+  const { isPremium: revenueCatPremium } = useSubscription();
+  const isPaidUser = revenueCatPremium || subscription?.tier === 'trial' || subscription?.tier === 'paid';
 
   // Fetch children
   const refreshChildren = useCallback(async () => {
@@ -264,6 +269,10 @@ export const ToyRotatorProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       if (result.success && result.data) {
         await refreshRotations();
         await refreshToys(); // Toy statuses change
+        // Schedule push notification reminder for rotation end
+        if (result.data.endDate && selectedChild) {
+          scheduleRotationReminder(result.data.endDate, selectedChild.name);
+        }
         return result.data;
       }
       return null;

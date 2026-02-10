@@ -114,17 +114,34 @@ export default function ToyLibraryScreen() {
                 {toys.filter((t) => t.status !== 'retired').length} toys
               </Text>
             </VStack>
-            <Button
-              size="md"
-              onPress={() => router.push('/add-toy' as any)}
-              bg="$primary500"
-              borderRadius="$full"
-            >
-              <HStack space="xs" alignItems="center">
-                <FontAwesome name="plus" size={14} color="#fff" />
-                <ButtonText>Add Toy</ButtonText>
-              </HStack>
-            </Button>
+            <HStack space="sm">
+              <Pressable
+                onPress={() => router.push('/scan-toy' as any)}
+              >
+                <Box
+                  width={40}
+                  height={40}
+                  borderRadius={20}
+                  bg="$violet100"
+                  $dark-bg="$violet900"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <FontAwesome name="magic" size={16} color="#8b5cf6" />
+                </Box>
+              </Pressable>
+              <Button
+                size="md"
+                onPress={() => router.push('/add-toy' as any)}
+                bg="$primary500"
+                borderRadius="$full"
+              >
+                <HStack space="xs" alignItems="center">
+                  <FontAwesome name="plus" size={14} color="#fff" />
+                  <ButtonText>Add Toy</ButtonText>
+                </HStack>
+              </Button>
+            </HStack>
           </HStack>
 
           {/* Search */}

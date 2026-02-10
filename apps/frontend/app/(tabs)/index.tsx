@@ -18,6 +18,7 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { useToyRotator } from '@/context/ToyRotatorContext';
 import { useScreenTracking } from '@/hooks/useAnalytics';
+import { PremiumBanner } from '@/components/PremiumBanner';
 
 export default function DashboardScreen() {
   const { user, userProfile, profileLoading } = useAuth();
@@ -33,6 +34,7 @@ export default function DashboardScreen() {
     refreshChildren,
     refreshToys,
     refreshRotations,
+    isPaidUser,
   } = useToyRotator();
   const router = useRouter();
 
@@ -289,6 +291,13 @@ export default function DashboardScreen() {
             </Box>
           )}
 
+          {/* Premium Upsell */}
+          {!isPaidUser && children.length > 0 && (
+            <PremiumBanner
+              description="Unlock AI toy scanning, smart rotation suggestions & space analysis"
+            />
+          )}
+
           {/* Quick Actions */}
           {children.length > 0 && (
             <>
@@ -309,9 +318,29 @@ export default function DashboardScreen() {
                   onPress={() => router.push('/create-rotation' as any)}
                 />
                 <QuickAction
+                  icon="magic"
+                  label="Scan Toy"
+                  color="#8b5cf6"
+                  onPress={() => router.push('/scan-toy' as any)}
+                />
+              </HStack>
+              <HStack space="sm" flexWrap="wrap" mt="$1">
+                <QuickAction
+                  icon="camera"
+                  label="Space Analysis"
+                  color="#ec4899"
+                  onPress={() => router.push('/analyze-space' as any)}
+                />
+                <QuickAction
                   icon="child"
                   label="Add Child"
                   color="#f59e0b"
+                  onPress={() => router.push('/(tabs)/profile')}
+                />
+                <QuickAction
+                  icon="users"
+                  label="Caregivers"
+                  color="#6366f1"
                   onPress={() => router.push('/(tabs)/profile')}
                 />
               </HStack>
