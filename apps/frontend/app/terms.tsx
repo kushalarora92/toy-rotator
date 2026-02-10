@@ -10,7 +10,7 @@ export default function TermsOfServiceScreen() {
           <VStack space="lg" maxWidth={800} alignSelf="center" width="100%">
             <VStack space="sm">
               <Heading size="2xl">Terms of Service</Heading>
-              <Text size="sm" color="$textLight600">Last Updated: [DATE]</Text>
+              <Text size="sm" color="$textLight600">Last Updated: July 2025</Text>
               <Text size="sm" color="$textLight600">Version: 1.0.0</Text>
             </VStack>
 
@@ -18,7 +18,7 @@ export default function TermsOfServiceScreen() {
             <VStack space="sm">
               <Heading size="lg">1. Acceptance of Terms</Heading>
               <Text>
-                By accessing or using [App Name] ("the App"), you agree to be bound by these 
+                By accessing or using ToyRotator ("the App"), you agree to be bound by these 
                 Terms of Service ("Terms"). If you do not agree to these Terms, do not use the App.
               </Text>
             </VStack>
@@ -27,8 +27,8 @@ export default function TermsOfServiceScreen() {
             <VStack space="sm" bg="$warning100" p="$4" borderRadius="$lg" borderWidth={1} borderColor="$warning500">
               <Heading size="lg" color="$warning700">2. Nature of Service</Heading>
               <VStack space="xs" mt="$2">
-                <Text><Text fontWeight="$bold">2.1</Text> [App Name] is a personal project. It is NOT a commercial or professional service.</Text>
-                <Text mt="$2"><Text fontWeight="$bold">2.2</Text> The App does NOT provide professional advice of any kind. It is purely an informational tool.</Text>
+                <Text><Text fontWeight="$bold">2.1</Text> ToyRotator is a personal project. It is NOT a commercial or professional service.</Text>
+                <Text mt="$2"><Text fontWeight="$bold">2.2</Text> The App does NOT provide professional parenting, child development, or educational advice. It is a toy organization and rotation tool.</Text>
               </VStack>
             </VStack>
 
@@ -112,7 +112,7 @@ export default function TermsOfServiceScreen() {
             <VStack space="sm">
               <Heading size="lg">9. Dispute Resolution</Heading>
               <VStack space="xs">
-                <Text><Text fontWeight="$bold">9.1 Informal Resolution:</Text> Before filing any formal legal action, you agree to first contact us at support@yourapp.com to attempt to resolve the dispute informally.</Text>
+                <Text><Text fontWeight="$bold">9.1 Informal Resolution:</Text> Before filing any formal legal action, you agree to first contact us at support@toyrotator.app to attempt to resolve the dispute informally.</Text>
                 <Text mt="$2"><Text fontWeight="$bold">9.2 No Class Actions:</Text> You agree that any dispute resolution proceedings will be conducted only on an individual basis and not in a class, consolidated, or representative action.</Text>
               </VStack>
             </VStack>
@@ -131,7 +131,7 @@ export default function TermsOfServiceScreen() {
               <Heading size="lg">11. Entire Agreement</Heading>
               <Text>
                 These Terms, together with our Privacy Policy, constitute the entire agreement between you 
-                and [App Name] regarding the use of the App.
+                and ToyRotator regarding the use of the App.
               </Text>
             </VStack>
 
@@ -160,8 +160,8 @@ export default function TermsOfServiceScreen() {
               <Heading size="lg">14. Contact</Heading>
               <Text>For questions about these Terms, contact us at:</Text>
               <VStack space="xs" ml="$4">
-                <Text>• <Text fontWeight="$bold">Email:</Text> support@yourapp.com</Text>
-                <Text>• <Text fontWeight="$bold">Privacy Questions:</Text> privacy@yourapp.com</Text>
+                <Text>• <Text fontWeight="$bold">Email:</Text> support@toyrotator.app</Text>
+                <Text>• <Text fontWeight="$bold">Privacy Questions:</Text> privacy@toyrotator.app</Text>
               </VStack>
             </VStack>
 

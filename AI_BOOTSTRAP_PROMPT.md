@@ -7,32 +7,167 @@
 ## [YOUR APP DETAILS] — Fill this in before running the prompt
 
 ```
-App Name: [e.g., "FitTrack", "RecipeBox", "BudgetBuddy"]
-App Description: [1-3 sentences about what your app does]
-Bundle ID: [e.g., "com.yourcompany.fittrack"]
-Expo Owner: [Your Expo username]
+directory: "toy-rotator"
+App Name: "ToyRotator"
+App Description:
+A toy organization and rotation app for parents of young children. The app helps families reduce toy clutter, intentionally rotate toys, and receive age-aware, non-medical play insights. Parents can organize toys manually for free, while optional AI assistance suggests toy rotations and insights.
 
-Tabs/Screens needed (besides the built-in Dashboard & Profile):
-- [Tab name]: [What it does]
-- [Tab name]: [What it does]
-- [Tab name]: [What it does]
+Bundle ID: [e.g. "com.kodianlabs.toyrotator"]
+Expo Owner: kushalarora92
+
+Tabs / Screens needed (besides the built-in Dashboard & Profile):
+
+- Dashboard:
+  Shows the current toy rotation, next rotation countdown, and a short insight explaining what this rotation supports.
+
+- Toy Library:
+  Manage all toys owned by the family. Users can add toys manually (free), categorize them using built-in categories, and optionally use AI photo-based toy recognition (paid, limited).
+
+- Rotation:
+  View upcoming or suggested toy rotations. Users can accept AI-suggested rotations (paid, limited) or create rotations manually.
 
 Key Features:
-- [Feature 1: e.g., "Users can create and track workouts"]
-- [Feature 2: e.g., "Show weekly/monthly progress charts"]
-- [Feature 3: e.g., "Set daily reminders for workout goals"]
 
-Data Model (what data does the app store per user?):
-- [e.g., "Workouts: date, type, duration, exercises[]"]
-- [e.g., "Goals: target, current progress, deadline"]
-- [e.g., "Settings: notification preferences, units"]
+- Toy organization is always free:
+  - Unlimited manual toy entry
+  - Built-in toy categories provided by the app
+  - Manual categorization and editing
 
-Any specific UI preferences:
-- [e.g., "Dark primary color scheme", "Minimalist design", "Card-based layout"]
-- [e.g., "Use charts/graphs for progress", "Calendar view for entries"]
+- Rotation system:
+  - Users define how many toys can be displayed (e.g. 10)
+  - Users define rotation length (1, 2, 3, 4, 7, or 30 days)
+  - Manual rotation creation is always available
+  - AI rotation suggestions are optional and limited
 
-Additional notes:
-- [Anything else the AI should know]
+- Child profile:
+  - Name
+  - Date of birth (used only for age calculation)
+  - Optional interests
+  - Preferred rotation cadence
+  - Reminder time
+
+- Insights (non-medical, non-diagnostic):
+  - Explain what skills or play styles a given rotation emphasizes (e.g. fine motor, language exposure, problem-solving)
+  - Language must be high-level, informational, and optional
+
+- Collaboration:
+  - Invite caregivers (e.g. spouse)
+  - Shared toy library and rotations
+  - Caregivers can view and log engagement feedback
+
+Monetization & Subscription Rules (IMPORTANT):
+
+- Free Tier (always available):
+  - Unlimited manual toy entry
+  - Manual toy categorization
+  - Manual toy rotations
+  - View child profile and rotation history
+  - App remains fully usable without payment
+
+- 21-Day Free Trial:
+  - Access to paid features with limits
+  - AI toy photo recognition (limited)
+  - AI rotation suggestions capped at 1 per day per user
+  - Insights and reminders enabled
+
+- Paid Subscription – Level 1:
+  - Continues AI-assisted features with limits
+  - AI rotation suggestions capped at 1 per day per user
+  - AI toy recognition with monthly limits
+  - Insights and collaboration features enabled
+
+- If a user does not renew:
+  - All data remains accessible
+  - Manual toy management and manual rotations remain available
+  - AI features and insights are disabled
+  - No data loss or blocking of core functionality
+
+Data Model (per household / user):
+
+- ChildProfile:
+  - name
+  - dateOfBirth
+  - interests[]
+  - rotationSettings (displayCount, durationDays, reminderTime)
+
+- Toy:
+  - name
+  - category
+  - ageRange
+  - skillTags[]
+  - source (manual | ai)
+  - status (active | resting | retired)
+  - createdAt / updatedAt
+
+- Rotation:
+  - startDate
+  - endDate
+  - toyIds[]
+  - source (manual | ai)
+  - insightSummary
+  - createdAt / updatedAt
+
+- Feedback:
+  - toyId
+  - engagement (liked | neutral | ignored)
+  - timestamp
+
+- SubscriptionStatus:
+  - tier
+  - trialEndDate
+  - active
+  - aiUsageCounters
+
+UI Preferences:
+
+- Calm, minimalist, parent-friendly design
+- Card-based layout
+- Clear explanations for AI suggestions
+- Dark and light mode supported
+- No medical language, no milestone scoring
+
+Additional Notes:
+
+- AI suggestions must be explainable and editable by the parent
+- Avoid any diagnostic or prescriptive language
+- The app supports decision-making, not parenting advice
+
+
+Onboarding & Space Analysis (New):
+
+- One-time Guided Onboarding (“Play Wizard”):
+  - After first sign-in, show a skippable, step-by-step walkthrough explaining:
+    - The problem of toy clutter and decision fatigue
+    - The concept of limited, intentional toy display
+    - How toy rotation works in the app
+    - Example visuals (e.g., cluttered space → curated shelf)
+  - This onboarding is shown only once per user
+  - Users can replay it later from the Profile screen
+
+- Space Photo Upload (Optional):
+  - Users can optionally upload a photo of their current play area
+  - Purpose is understanding and reflection, not interior redesign
+  - The app must not promise room redesigns or furniture layouts
+
+- Space Analysis Logic:
+  - Free users:
+    - Can upload one space photo
+    - Receive basic, rule-based observations (e.g. toys stacked, no clear display boundary, large and small toys mixed)
+  - Trial and Paid users:
+    - Receive AI-generated, explainable insights based on the uploaded space photo
+    - Insights connect the physical space to toy rotation concepts (e.g. display capacity, separating large toys)
+    - Language must remain non-judgmental, non-prescriptive, and non-medical
+
+- Visualization Guidelines:
+  - Use illustrative examples of toy shelves or display setups
+  - Do not generate custom interior design layouts
+  - All visuals are examples, not guarantees
+
+- Feature Gating:
+  - Space photo upload is available to all users
+  - AI-powered space insights are part of paid features (available during 21-day trial with limits)
+  - If subscription ends, uploaded photos remain accessible, but AI insights are disabled
+
 ```
 
 ---

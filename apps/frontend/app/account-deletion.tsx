@@ -1,86 +1,80 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
-import { View, Text, Heading } from '@gluestack-ui/themed';
+import { ScrollView } from 'react-native';
+import { Box, VStack, Text, Heading } from '@gluestack-ui/themed';
 import DeletionScheduledBanner from '@/components/DeletionScheduledBanner';
 import { useAuth } from '@/context/AuthContext';
-import { useColorScheme } from '@/components/useColorScheme';
-import Colors from '@/constants/Colors';
+import WebContainer from '@/components/WebContainer';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function AccountDeletionScreen() {
   const { userProfile } = useAuth();
-  const colorScheme = useColorScheme();
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}
-      contentContainerStyle={styles.content}
-    >
-      <View style={styles.header}>
-        <Heading size="xl" style={styles.title}>
-          Account Scheduled for Deletion
-        </Heading>
-        <Text size="md" style={styles.description}>
-          Your account is scheduled to be permanently deleted.
-          You can cancel this request below.
-        </Text>
-      </View>
+    <WebContainer>
+      <ScrollView style={{ flex: 1 }}>
+        <Box flex={1} bg="$background" px="$5" py="$6">
+          <VStack space="lg" maxWidth={600} alignSelf="center" width="100%">
+            {/* Header */}
+            <VStack space="sm">
+              <Box alignItems="center" mb="$2">
+                <Box
+                  bg="$error100"
+                  $dark-bg="$error900"
+                  p="$4"
+                  borderRadius="$full"
+                >
+                  <FontAwesome name="exclamation-triangle" size={32} color="#ef4444" />
+                </Box>
+              </Box>
+              <Heading size="xl" textAlign="center">
+                Account Scheduled for Deletion
+              </Heading>
+              <Text
+                size="md"
+                color="$textLight600"
+                $dark-color="$textDark400"
+                textAlign="center"
+              >
+                Your account is scheduled to be permanently deleted.
+                You can cancel this request below.
+              </Text>
+            </VStack>
 
-      {userProfile?.deletionExecutionDate && (
-        <DeletionScheduledBanner deletionDate={userProfile.deletionExecutionDate} />
-      )}
+            {userProfile?.deletionExecutionDate && (
+              <DeletionScheduledBanner deletionDate={userProfile.deletionExecutionDate} />
+            )}
 
-      <View style={styles.infoSection}>
-        <Heading size="md" style={styles.sectionTitle}>
-          What happens next?
-        </Heading>
-        <Text size="sm" style={styles.infoText}>
-          • Your account will be deleted on the scheduled date
-        </Text>
-        <Text size="sm" style={styles.infoText}>
-          • All your data will be permanently removed
-        </Text>
-        <Text size="sm" style={styles.infoText}>
-          • You can cancel anytime before the deletion date
-        </Text>
-        <Text size="sm" style={styles.infoText}>
-          • After cancellation, you'll regain full access to your account
-        </Text>
-      </View>
-    </ScrollView>
+            {/* What happens next */}
+            <Box
+              bg="$backgroundLight100"
+              $dark-bg="$backgroundDark800"
+              p="$4"
+              borderRadius="$lg"
+              borderWidth={1}
+              borderColor="$borderLight200"
+              $dark-borderColor="$borderDark700"
+            >
+              <VStack space="md">
+                <Heading size="md">What happens next?</Heading>
+                <VStack space="sm">
+                  <Text size="sm" color="$textLight600" $dark-color="$textDark400">
+                    • Your account will be deleted on the scheduled date
+                  </Text>
+                  <Text size="sm" color="$textLight600" $dark-color="$textDark400">
+                    • All your data — toys, rotations, children, and household — will be permanently removed
+                  </Text>
+                  <Text size="sm" color="$textLight600" $dark-color="$textDark400">
+                    • You can cancel anytime before the deletion date
+                  </Text>
+                  <Text size="sm" color="$textLight600" $dark-color="$textDark400">
+                    • After cancellation, you'll regain full access to your account
+                  </Text>
+                </VStack>
+              </VStack>
+            </Box>
+          </VStack>
+        </Box>
+      </ScrollView>
+    </WebContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    padding: 20,
-  },
-  header: {
-    marginBottom: 24,
-  },
-  title: {
-    marginBottom: 12,
-  },
-  description: {
-    color: '#64748b',
-    lineHeight: 22,
-  },
-  infoSection: {
-    marginTop: 32,
-    padding: 16,
-    backgroundColor: '#f8fafc',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-  },
-  sectionTitle: {
-    marginBottom: 16,
-  },
-  infoText: {
-    color: '#475569',
-    marginBottom: 8,
-    lineHeight: 20,
-  },
-});

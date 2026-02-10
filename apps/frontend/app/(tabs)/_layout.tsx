@@ -66,6 +66,20 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="toys"
+        options={{
+          title: 'Toy Library',
+          tabBarIcon: ({ color }) => <TabBarIcon name="cube" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="rotations"
+        options={{
+          title: 'Rotations',
+          tabBarIcon: ({ color }) => <TabBarIcon name="refresh" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',

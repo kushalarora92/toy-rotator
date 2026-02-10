@@ -11,6 +11,7 @@ import { config } from '../gluestack-ui.config';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { ToyRotatorProvider } from '@/context/ToyRotatorContext';
 import { useVersionCheck } from '@/hooks/useVersionCheck';
 import Colors from '@/constants/Colors';
 import WebContainer from '@/components/WebContainer';
@@ -31,7 +32,7 @@ SplashScreen.preventAutoHideAsync();
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-  const { user, loading, needsProfileSetup, profileLoading, isScheduledForDeletion } = useAuth();
+  const { user, userProfile, loading, needsProfileSetup, profileLoading, isScheduledForDeletion } = useAuth();
   const segments = useSegments();
   const router = useRouter();
 
@@ -41,6 +42,7 @@ function RootLayoutNav() {
     const inAuthGroup = segments[0] === 'auth';
     const inVerifyEmailScreen = segments[1] === 'verify-email';
     const inProfileSetupScreen = segments[0] === 'profile-setup';
+    const inOnboardingScreen = segments[0] === 'onboarding';
     const inAccountDeletionScreen = segments[0] === 'account-deletion';
     const inPublicPage = segments[0] === 'privacy' || segments[0] === 'terms' || segments[0] === 'support' || segments[0] === 'delete-account';
 
@@ -62,11 +64,15 @@ function RootLayoutNav() {
       if (!inProfileSetupScreen) {
         router.replace('/profile-setup' as any);
       }
-    } else if (user && user.emailVerified && !needsProfileSetup && !isScheduledForDeletion && (inAuthGroup || inProfileSetupScreen || inAccountDeletionScreen)) {
-      // Only redirect to tabs if user is in auth/setup/deletion screens, not if already in tabs
+    } else if (user && user.emailVerified && !needsProfileSetup && !isScheduledForDeletion && userProfile && !userProfile.onboardingCompleted) {
+      // Redirect to onboarding if not completed
+      if (!inOnboardingScreen) {
+        router.replace('/onboarding' as any);
+      }
+    } else if (user && user.emailVerified && !needsProfileSetup && !isScheduledForDeletion && (inAuthGroup || inProfileSetupScreen || inAccountDeletionScreen || inOnboardingScreen)) {
+      // Only redirect to tabs if user is in auth/setup/deletion/onboarding screens
       router.replace('/(tabs)');
     }
-    // If already in tabs group, don't redirect - let them stay on current tab
   }, [user, loading, needsProfileSetup, profileLoading, isScheduledForDeletion, segments]);
 
   // Show loading screen while auth state and profile are being determined
@@ -88,9 +94,34 @@ function RootLayoutNav() {
           <Stack>
           <Stack.Screen name="auth" options={{ headerShown: false }} />
           <Stack.Screen name="profile-setup" options={{ headerShown: false }} />
+          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
           <Stack.Screen name="account-deletion" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+          <Stack.Screen 
+            name="add-toy" 
+            options={{ 
+              title: 'Add Toy',
+              headerShown: true,
+              presentation: 'card',
+            }} 
+          />
+          <Stack.Screen 
+            name="create-rotation" 
+            options={{ 
+              title: 'Create Rotation',
+              headerShown: true,
+              presentation: 'card',
+            }} 
+          />
+          <Stack.Screen 
+            name="rotation-detail" 
+            options={{ 
+              title: 'Rotation Detail',
+              headerShown: true,
+              presentation: 'card',
+            }} 
+          />
           <Stack.Screen 
             name="privacy" 
             options={{ 
@@ -175,7 +206,9 @@ function AppContent() {
   // Normal app flow
   return (
     <AuthProvider>
-      <RootLayoutNav />
+      <ToyRotatorProvider>
+        <RootLayoutNav />
+      </ToyRotatorProvider>
     </AuthProvider>
   );
 }

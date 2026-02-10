@@ -24,8 +24,8 @@ interface AuthBrandingProps {
 export function AuthBranding({
   showTitle = false,
   showTagline = false,
-  title = 'My App',
-  tagline = 'Welcome to your app',
+  title = 'ToyRotator',
+  tagline = 'Less clutter, more play',
 }: AuthBrandingProps) {
   return (
     <VStack space="sm" alignItems="center" gap="0">

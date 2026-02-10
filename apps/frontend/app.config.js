@@ -1,14 +1,14 @@
 module.exports = {
   expo: {
-    name: 'My App',
-    slug: 'my-app',
+    name: 'ToyRotator',
+    slug: 'toy-rotator',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
-    scheme: 'my-app',
+    scheme: 'toyrotator',
     userInterfaceStyle: 'automatic',
     newArchEnabled: true,
-    owner: 'your-expo-username',
+    owner: 'kushalarora92',
     extra: {
       eas: {
         projectId: 'YOUR_EAS_PROJECT_ID',
@@ -21,7 +21,7 @@ module.exports = {
     },
     ios: {
       supportsTablet: true,
-      bundleIdentifier: 'com.yourcompany.myapp',
+      bundleIdentifier: 'com.kodianlabs.toyrotator',
       googleServicesFile: process.env.GOOGLE_SERVICE_INFO_PLIST || './GoogleService-Info.plist',
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
@@ -35,7 +35,7 @@ module.exports = {
       },
       edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,
-      package: 'com.yourcompany.myapp',
+      package: 'com.kodianlabs.toyrotator',
       googleServicesFile: process.env.GOOGLE_SERVICES_JSON || './google-services.json',
     },
     web: {

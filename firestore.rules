@@ -11,16 +11,73 @@ service cloud.firestore {
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
+
+    // Helper function to check if user is a household member
+    function isHouseholdMember(householdId) {
+      return isAuthenticated() && (
+        request.auth.uid == householdId ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.householdId == householdId
+      );
+    }
     
     // Users collection - users can only access their own data
     match /users/{userId} {
-      // Users can read their own data
       allow read: if isOwner(userId);
-      
-      // Users can create/update their own data
       allow create, update: if isOwner(userId);
-      
-      // Users cannot delete their own data (use Cloud Functions for this)
+      allow delete: if false;
+    }
+
+    // Households collection - members can read, owner can write
+    match /households/{householdId} {
+      allow read: if isHouseholdMember(householdId);
+      allow create: if isAuthenticated() && request.auth.uid == householdId;
+      allow update: if isHouseholdMember(householdId);
+      allow delete: if false;
+
+      // Children subcollection
+      match /children/{childId} {
+        allow read: if isHouseholdMember(householdId);
+        allow create, update: if isHouseholdMember(householdId);
+        allow delete: if isHouseholdMember(householdId);
+      }
+
+      // Toys subcollection
+      match /toys/{toyId} {
+        allow read: if isHouseholdMember(householdId);
+        allow create, update: if isHouseholdMember(householdId);
+        allow delete: if isHouseholdMember(householdId);
+      }
+
+      // Rotations subcollection
+      match /rotations/{rotationId} {
+        allow read: if isHouseholdMember(householdId);
+        allow create, update: if isHouseholdMember(householdId);
+        allow delete: if false;
+      }
+
+      // Feedback subcollection
+      match /feedback/{feedbackId} {
+        allow read: if isHouseholdMember(householdId);
+        allow create: if isHouseholdMember(householdId);
+        allow update, delete: if false;
+      }
+
+      // Space photos subcollection
+      match /spacePhotos/{photoId} {
+        allow read: if isHouseholdMember(householdId);
+        allow create: if isHouseholdMember(householdId);
+        allow update, delete: if false;
+      }
+    }
+
+    // Invitations collection - invitees can read their own invitations
+    match /invitations/{invitationId} {
+      allow read: if isAuthenticated() && (
+        resource.data.inviteeEmail == request.auth.token.email ||
+        resource.data.inviterUid == request.auth.uid
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && resource.data.inviteeEmail == request.auth.token.email;
       allow delete: if false;
     }
     

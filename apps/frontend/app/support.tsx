@@ -4,7 +4,7 @@ import WebContainer from '@/components/WebContainer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function SupportScreen() {
-  const SUPPORT_EMAIL = 'support@yourapp.com';
+  const SUPPORT_EMAIL = 'support@toyrotator.app';
 
   const handleEmailPress = () => {
     Linking.openURL(`mailto:${SUPPORT_EMAIL}?subject=Support Request`);
@@ -40,7 +40,7 @@ export default function SupportScreen() {
                 </Button>
 
                 <Text fontWeight="$bold" mt="$3">Privacy Questions:</Text>
-                <Text>privacy@yourapp.com</Text>
+                <Text>privacy@toyrotator.app</Text>
 
                 <Text size="xs" color="$textLight500" mt="$2">
                   We typically respond within 24-48 hours
@@ -51,6 +51,23 @@ export default function SupportScreen() {
             {/* FAQ Section */}
             <VStack space="md">
               <Heading size="lg">Frequently Asked Questions</Heading>
+
+              <VStack space="sm">
+                <Heading size="md">How does toy rotation work?</Heading>
+                <Text>
+                  ToyRotator helps you organize toys into active and resting groups. Add your toys to the 
+                  library, then create a rotation — either manually or with AI suggestions. After a set 
+                  period, rotate to fresh toys while the previous set rests.
+                </Text>
+              </VStack>
+
+              <VStack space="sm">
+                <Heading size="md">Can I share with my partner or caregiver?</Heading>
+                <Text>
+                  Yes! Go to Profile → Caregivers and invite them by email. Once they accept, they'll 
+                  be able to view and manage the same toys, rotations, and children in your household.
+                </Text>
+              </VStack>
 
               <VStack space="sm">
                 <Heading size="md">Is my data secure?</Heading>
@@ -89,9 +106,11 @@ export default function SupportScreen() {
 
             {/* App Information */}
             <VStack space="md" mb="$8">
-              <Heading size="lg">About [App Name]</Heading>
+              <Heading size="lg">About ToyRotator</Heading>
               <Text>
-                [App Name] is an application designed to help you [describe purpose].
+                ToyRotator is a smart toy organization and rotation app designed to reduce toy clutter, 
+                boost play engagement, and make parenting a little easier. Organize your toy library, 
+                create age-appropriate rotations (with AI help!), and track what your kids love.
               </Text>
 
               {/* Important Notice */}

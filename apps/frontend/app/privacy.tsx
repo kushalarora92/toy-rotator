@@ -10,7 +10,7 @@ export default function PrivacyPolicyScreen() {
           <VStack space="lg" maxWidth={800} alignSelf="center" width="100%">
             <VStack space="sm">
               <Heading size="2xl">Privacy Policy</Heading>
-              <Text size="sm" color="$textLight600">Last Updated: [DATE]</Text>
+              <Text size="sm" color="$textLight600">Last Updated: July 2025</Text>
               <Text size="sm" color="$textLight600">Version: 1.0.0</Text>
             </VStack>
 
@@ -18,7 +18,7 @@ export default function PrivacyPolicyScreen() {
             <VStack space="sm">
               <Heading size="lg">Introduction</Heading>
               <Text>
-                [App Name] ("we", "our", or "the app") is committed to protecting your privacy. 
+                ToyRotator ("we", "our", or "the app") is committed to protecting your privacy. 
                 This Privacy Policy explains how we collect, use, and safeguard your personal information 
                 when you use our application.
               </Text>
@@ -29,10 +29,14 @@ export default function PrivacyPolicyScreen() {
               <Heading size="lg">Information We Collect</Heading>
 
               <Heading size="md">Personal Information You Provide</Heading>
-              <Text>When you use [App Name], you may provide:</Text>
+              <Text>When you use ToyRotator, you may provide:</Text>
               <VStack space="xs" ml="$4">
                 <Text>• <Text fontWeight="$bold">Account Information:</Text> Email address, display name</Text>
-                <Text>• <Text fontWeight="$bold">Profile Data:</Text> Information you enter into your profile</Text>
+                <Text>• <Text fontWeight="$bold">Children's Information:</Text> First names and dates of birth of your children (used to personalize toy recommendations)</Text>
+                <Text>• <Text fontWeight="$bold">Toy Data:</Text> Names, categories, skill tags, and notes about your toys</Text>
+                <Text>• <Text fontWeight="$bold">Rotation Data:</Text> Toy rotation schedules, feedback, and engagement data</Text>
+                <Text>• <Text fontWeight="$bold">Household Data:</Text> Caregiver email addresses for household collaboration</Text>
+                <Text>• <Text fontWeight="$bold">Photos:</Text> Images of play spaces (if you use the Space Analysis feature)</Text>
               </VStack>
 
               <Heading size="md" mt="$2">Automatically Collected Information</Heading>
@@ -123,6 +127,15 @@ export default function PrivacyPolicyScreen() {
                 </Link></Text>
               </VStack>
 
+              <Heading size="md" mt="$2">OpenAI</Heading>
+              <VStack space="xs" ml="$4">
+                <Text>• <Text fontWeight="$bold">Purpose:</Text> AI-powered toy rotation suggestions and space analysis</Text>
+                <Text>• <Text fontWeight="$bold">Data Sent:</Text> Anonymized toy names, categories, skill tags, and child age ranges (no personally identifiable information)</Text>
+                <Text>• <Text fontWeight="$bold">Privacy Policy:</Text> <Link href="https://openai.com/policies/privacy-policy" isExternal>
+                  <Text color="$primary500">https://openai.com/policies/privacy-policy</Text>
+                </Link></Text>
+              </VStack>
+
               <Heading size="md" mt="$2">Expo</Heading>
               <VStack space="xs" ml="$4">
                 <Text>• <Text fontWeight="$bold">Purpose:</Text> App development platform</Text>
@@ -137,9 +150,12 @@ export default function PrivacyPolicyScreen() {
             <VStack space="sm">
               <Heading size="lg">Children's Privacy</Heading>
               <Text>
-                [App Name] is not intended for users under 18 years of age. We do not knowingly 
-                collect information from children. If you believe a child has provided us with personal 
-                information, please contact us immediately.
+                ToyRotator is intended for parents and caregivers. While the app stores children's first names 
+                and dates of birth to personalize toy recommendations, this data is entered and managed 
+                by the parent/caregiver account holder. Children do not directly interact with or create 
+                accounts on ToyRotator. We do not knowingly collect information directly from children 
+                under 13. If you believe a child has provided us with personal information without 
+                parental consent, please contact us immediately.
               </Text>
             </VStack>
 
@@ -180,8 +196,8 @@ export default function PrivacyPolicyScreen() {
               <Heading size="lg">Contact Us</Heading>
               <Text>For privacy-related questions or requests:</Text>
               <VStack space="xs" ml="$4">
-                <Text>• <Text fontWeight="$bold">Email:</Text> privacy@yourapp.com</Text>
-                <Text>• <Text fontWeight="$bold">Support:</Text> support@yourapp.com</Text>
+                <Text>• <Text fontWeight="$bold">Email:</Text> privacy@toyrotator.app</Text>
+                <Text>• <Text fontWeight="$bold">Support:</Text> support@toyrotator.app</Text>
               </VStack>
             </VStack>
 
@@ -189,7 +205,7 @@ export default function PrivacyPolicyScreen() {
             <VStack space="sm" bg="$warning100" p="$4" borderRadius="$lg" borderWidth={1} borderColor="$warning500">
               <Heading size="lg" color="$warning700">Important Notice</Heading>
               <Text fontWeight="$bold" color="$warning700">
-                [App Name] is provided as-is.
+                ToyRotator is provided as-is.
               </Text>
               <VStack space="xs" ml="$4" mt="$2">
                 <Text>• <Text fontWeight="$bold">No Liability:</Text> The creator accepts no liability for any errors, omissions, or consequences arising from the use of this app.</Text>
@@ -202,7 +218,7 @@ export default function PrivacyPolicyScreen() {
             <VStack space="sm" mb="$8">
               <Heading size="lg">Consent</Heading>
               <Text>
-                By using [App Name], you acknowledge that you have read and understood this Privacy Policy 
+                By using ToyRotator, you acknowledge that you have read and understood this Privacy Policy 
                 and you consent to our collection and use of information as described.
               </Text>
             </VStack>

@@ -3,7 +3,7 @@ import { Box, VStack, Heading, Text, Button, ButtonText, Link } from '@gluestack
 import WebContainer from '@/components/WebContainer';
 
 export default function DeleteAccountScreen() {
-  const SUPPORT_EMAIL = 'support@yourapp.com';
+  const SUPPORT_EMAIL = 'support@toyrotator.app';
 
   const handleEmailPress = () => {
     Linking.openURL(`mailto:${SUPPORT_EMAIL}?subject=Account Deletion Request`);
@@ -16,7 +16,7 @@ export default function DeleteAccountScreen() {
           <VStack space="lg" maxWidth={800} alignSelf="center" width="100%">
             <VStack space="sm">
               <Heading size="2xl">Delete Your Account</Heading>
-              <Text size="sm" color="$textLight600">[App Name]</Text>
+              <Text size="sm" color="$textLight600">ToyRotator</Text>
             </VStack>
 
             <Text>
@@ -59,7 +59,10 @@ export default function DeleteAccountScreen() {
               </Text>
               <VStack space="xs" ml="$4">
                 <Text>• Your account information (email address, display name)</Text>
-                <Text>• Your profile data and settings</Text>
+                <Text>• Your profile data, children's information, and settings</Text>
+                <Text>• Your entire toy library and rotation history</Text>
+                <Text>• All feedback and engagement data</Text>
+                <Text>• Your household data and caregiver connections</Text>
                 <Text>• All analytics and usage data associated with your account</Text>
               </VStack>
             </VStack>

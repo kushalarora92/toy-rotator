@@ -35,9 +35,9 @@ export const APP_VERSION_CONFIG = {
    * Update these with your actual App Store and Play Store URLs.
    */
   storeUrls: {
-    ios: 'https://apps.apple.com/app/your-app-name/idYOUR_APP_ID',
+    ios: 'https://apps.apple.com/app/toyrotator/idYOUR_APP_ID',
     android:
-      'https://play.google.com/store/apps/details?id=com.yourcompany.yourapp',
+      'https://play.google.com/store/apps/details?id=com.kodianlabs.toyrotator',
   },
 } as const;
 
