@@ -1,0 +1,26 @@
+{
+  "name": "expo-app-template",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "build:web": "pnpm --filter app-frontend run build:web",
+    "build:functions": "cd packages/types && pnpm build && cd ../../apps/functions/functions && node copy-types.js && npm install && npm run build",
+    "deploy:web": "pnpm run build:web && firebase deploy --only hosting",
+    "deploy:functions": "pnpm run build:functions && firebase deploy --only functions",
+    "deploy:rules": "firebase deploy --only firestore:rules",
+    "deploy:all": "pnpm run build:web && firebase deploy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.18.0",
+  "devDependencies": {
+    "turbo": "^2.5.8"
+  },
+  "private": true
+}

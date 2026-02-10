@@ -1,0 +1,60 @@
+import { httpsCallable, HttpsCallableResult } from 'firebase/functions';
+import { functions } from '../config/firebase';
+import { UserProfile, UpdateProfileData, ApiResponse } from '@my-app/types';
+
+/**
+ * Hook to interact with Firebase Cloud Functions
+ */
+export const useFirebaseFunctions = () => {
+  /**
+   * Get current user's profile from Firestore
+   */
+  const getUserInfo = async (): Promise<UserProfile> => {
+    const getUserInfoFn = httpsCallable<void, UserProfile>(functions, 'getUserInfo');
+    const result: HttpsCallableResult<UserProfile> = await getUserInfoFn();
+    return result.data;
+  };
+
+  /**
+   * Update current user's profile in Firestore
+   */
+  const updateUserProfile = async (data: UpdateProfileData): Promise<{ success: boolean; message: string; data: any }> => {
+    const updateUserProfileFn = httpsCallable<UpdateProfileData, { success: boolean; message: string; data: any }>(
+      functions,
+      'updateUserProfile'
+    );
+    const result = await updateUserProfileFn(data);
+    return result.data;
+  };
+
+  /**
+   * Schedule account deletion (30-day grace period)
+   */
+  const scheduleAccountDeletion = async (): Promise<ApiResponse<{ deletionDate: string }>> => {
+    const scheduleAccountDeletionFn = httpsCallable<void, ApiResponse<{ deletionDate: string }>>(
+      functions,
+      'scheduleAccountDeletion'
+    );
+    const result: HttpsCallableResult<ApiResponse<{ deletionDate: string }>> = await scheduleAccountDeletionFn();
+    return result.data;
+  };
+
+  /**
+   * Cancel scheduled account deletion and reactivate account
+   */
+  const cancelAccountDeletion = async (): Promise<ApiResponse<null>> => {
+    const cancelAccountDeletionFn = httpsCallable<void, ApiResponse<null>>(
+      functions,
+      'cancelAccountDeletion'
+    );
+    const result: HttpsCallableResult<ApiResponse<null>> = await cancelAccountDeletionFn();
+    return result.data;
+  };
+
+  return {
+    getUserInfo,
+    updateUserProfile,
+    scheduleAccountDeletion,
+    cancelAccountDeletion,
+  };
+};

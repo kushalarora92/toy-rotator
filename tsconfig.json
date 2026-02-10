@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@my-app/*": ["packages/*/src"]
+    },
+    "allowJs": true,
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+  },
+  "include": ["apps/**/*", "packages/**/*"]
+}
