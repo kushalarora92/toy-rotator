@@ -7,6 +7,7 @@ import {onRequest} from "firebase-functions/https";
 import {onCall, HttpsError} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
+import {CloudTasksClient} from "@google-cloud/tasks";
 import {
   UserProfile,
   UpdateProfileData,
@@ -38,6 +39,9 @@ admin.initializeApp();
 
 // Get Firestore instance
 const db = admin.firestore();
+
+// Initialize Cloud Tasks client
+const tasksClient = new CloudTasksClient();
 
 setGlobalOptions({maxInstances: 10});
 
@@ -175,8 +179,63 @@ export const updateUserProfile = onCall(
 );
 
 // ============================================================
-// ACCOUNT DELETION
+// ACCOUNT DELETION WITH 30-DAY GRACE PERIOD
 // ============================================================
+
+/**
+ * Helper function to create a Cloud Task for delayed account deletion
+ *
+ * @param {string} userId - User ID to delete
+ * @param {Date} scheduledDate - When to execute the deletion
+ * @return {Promise<string>} Task name
+ */
+async function createDeletionTask(
+  userId: string,
+  scheduledDate: Date
+): Promise<string> {
+  const project = process.env.GCLOUD_PROJECT || process.env.GCP_PROJECT;
+  const location = process.env.FUNCTION_REGION || "us-central1";
+  const queue = "account-deletion-queue";
+
+  if (!project) {
+    throw new Error("Project ID not found in environment");
+  }
+
+  const parent = tasksClient.queuePath(project, location, queue);
+
+  // URL of the HTTP Cloud Function to call
+  const functionUrl =
+    `https://${location}-${project}.cloudfunctions.net/` +
+    "executeAccountDeletion";
+
+  const task = {
+    httpRequest: {
+      httpMethod: "POST" as const,
+      url: functionUrl,
+      body: Buffer.from(JSON.stringify({userId})).toString("base64"),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      oidcToken: {
+        serviceAccountEmail: `${project}@appspot.gserviceaccount.com`,
+      },
+    },
+    scheduleTime: {
+      seconds: Math.floor(scheduledDate.getTime() / 1000),
+    },
+  };
+
+  const [response] = await tasksClient.createTask({parent, task});
+  logger.info(
+    `Created deletion task: ${response.name} for userId: ${userId}`
+  );
+
+  if (!response.name) {
+    throw new Error("Failed to create task: no task name returned");
+  }
+
+  return response.name;
+}
 
 export const scheduleAccountDeletion = onCall(
   async (request): Promise<ApiResponse<{ deletionDate: string }>> => {
@@ -197,10 +256,14 @@ export const scheduleAccountDeletion = onCall(
       deletionDate.setDate(deletionDate.getDate() + 30);
       const deletionDateISO = deletionDate.toISOString().split("T")[0];
 
+      // Create Cloud Task for delayed deletion
+      const taskName = await createDeletionTask(userId, deletionDate);
+
       await db.collection("users").doc(userId).set({
         deletionStatus: DELETION_STATUS.SCHEDULED_FOR_DELETION,
         deletionScheduledAt: admin.firestore.FieldValue.serverTimestamp(),
         deletionExecutionDate: deletionDateISO,
+        deletionTaskName: taskName,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       }, {merge: true});
 
@@ -226,6 +289,111 @@ export const scheduleAccountDeletion = onCall(
     }
   }
 );
+
+/**
+ * HTTP function called by Cloud Task to execute account deletion
+ * Deletes all user data (household, subcollections) and Firebase Auth account
+ */
+export const executeAccountDeletion = onRequest(async (req, res) => {
+  const {userId} = req.body;
+
+  if (!userId) {
+    res.status(400).send({error: "userId is required"});
+    return;
+  }
+
+  try {
+    logger.info(`Executing account deletion for userId: ${userId}`);
+
+    // Check if user still wants deletion (they might have cancelled)
+    const userDoc = await db.collection("users").doc(userId).get();
+
+    if (!userDoc.exists) {
+      logger.info(`User ${userId} already deleted or doesn't exist`);
+      res.status(200).send({message: "User already deleted"});
+      return;
+    }
+
+    const userData = userDoc.data();
+    if (userData?.deletionStatus !==
+        DELETION_STATUS.SCHEDULED_FOR_DELETION) {
+      logger.info(`User ${userId} cancelled deletion, skipping`);
+      res.status(200).send({message: "Deletion was cancelled by user"});
+      return;
+    }
+
+    // Get household ID (same as userId for owners)
+    const householdId = userData?.householdId || userId;
+
+    // Delete all household subcollections
+    const householdRef = db.collection("households").doc(householdId);
+    const subcollections = ["children", "toys", "rotations", "feedback"];
+    for (const subcollection of subcollections) {
+      const snapshot = await householdRef.collection(subcollection).get();
+      const batch = db.batch();
+      snapshot.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      if (snapshot.size > 0) {
+        await batch.commit();
+      }
+      logger.info(
+        `Deleted ${snapshot.size} docs from households/${householdId}/${subcollection}`
+      );
+    }
+
+    // Delete household document itself
+    await householdRef.delete();
+    logger.info(`Deleted household doc: ${householdId}`);
+
+    // Delete any invitations for this household
+    const invitationsSnapshot = await db
+      .collection("invitations")
+      .where("householdId", "==", householdId)
+      .get();
+    if (invitationsSnapshot.size > 0) {
+      const batch = db.batch();
+      invitationsSnapshot.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+      logger.info(
+        `Deleted ${invitationsSnapshot.size} invitations for household ${householdId}`
+      );
+    }
+
+    // Delete user document
+    await db.collection("users").doc(userId).delete();
+    logger.info(`Firestore data deleted for userId: ${userId}`);
+
+    // Delete user from Firebase Authentication
+    try {
+      await admin.auth().deleteUser(userId);
+      logger.info(`Firebase Auth account deleted for userId: ${userId}`);
+    } catch (authError: any) {
+      if (authError.code === "auth/user-not-found") {
+        logger.info(`Auth user ${userId} already deleted`);
+      } else {
+        throw authError;
+      }
+    }
+
+    logger.info(`Account deletion completed for userId: ${userId}`);
+    res.status(200).send({
+      success: true,
+      message: "Account deleted successfully",
+    });
+  } catch (error) {
+    logger.error(
+      `Error executing account deletion for userId: ${userId}`,
+      error
+    );
+    res.status(500).send({
+      error: "Failed to delete account",
+      details: error,
+    });
+  }
+});
 
 export const cancelAccountDeletion = onCall(
   async (request): Promise<ApiResponse<null>> => {
@@ -256,10 +424,26 @@ export const cancelAccountDeletion = onCall(
         );
       }
 
+      // Cancel the Cloud Task if task name exists
+      if (userData.deletionTaskName) {
+        try {
+          await tasksClient.deleteTask({name: userData.deletionTaskName});
+          logger.info(`Deleted Cloud Task: ${userData.deletionTaskName}`);
+        } catch (taskError: any) {
+          // Task might have already been deleted or doesn't exist
+          logger.warn(
+            `Could not delete task ${userData.deletionTaskName}:`,
+            taskError
+          );
+        }
+      }
+
+      // Reactivate account - remove deletion fields
       await db.collection("users").doc(userId).update({
         deletionStatus: DELETION_STATUS.ACTIVE,
         deletionScheduledAt: admin.firestore.FieldValue.delete(),
         deletionExecutionDate: admin.firestore.FieldValue.delete(),
+        deletionTaskName: admin.firestore.FieldValue.delete(),
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
 

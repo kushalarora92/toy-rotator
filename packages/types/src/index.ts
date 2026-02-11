@@ -309,6 +309,7 @@ export interface UserProfile {
   deletionStatus?: DeletionStatus;
   deletionScheduledAt?: any;
   deletionExecutionDate?: string;
+  deletionTaskName?: string; // Cloud Task name (for cancellation)
 }
 
 export interface UpdateProfileData {

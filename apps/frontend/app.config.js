@@ -64,7 +64,6 @@ module.exports = {
           color: '#0077e6',
         },
       ],
-      'react-native-purchases',
       [
         'expo-build-properties',
         {
