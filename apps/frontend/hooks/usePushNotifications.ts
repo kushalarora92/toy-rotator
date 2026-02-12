@@ -21,7 +21,7 @@ Notifications.setNotificationHandler({
  * Handles permission requests, token registration, and notification listeners
  */
 export function usePushNotifications() {
-  const { user } = useAuth();
+  const { user, userProfile } = useAuth();
   const { registerPushToken } = useFirebaseFunctions();
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
   const [permissionGranted, setPermissionGranted] = useState(false);
@@ -174,9 +174,12 @@ export function usePushNotifications() {
     await Notifications.cancelAllScheduledNotificationsAsync();
   }, []);
 
-  // Initialize on mount
+  // Initialize after profile setup is complete
+  // We wait for onboardingCompleted so the user doc exists in Firestore
+  // before attempting to register the push token (which uses .update())
   useEffect(() => {
     if (!user || Platform.OS === 'web') return;
+    if (!userProfile?.onboardingCompleted) return;
 
     // Register and save token
     registerForPushNotifications().then((token) => {
@@ -209,7 +212,7 @@ export function usePushNotifications() {
         responseListener.current.remove();
       }
     };
-  }, [user]);
+  }, [user, userProfile?.onboardingCompleted]);
 
   return {
     expoPushToken,

@@ -11,7 +11,7 @@ module.exports = {
     owner: 'kushalarora92',
     extra: {
       eas: {
-        projectId: 'YOUR_EAS_PROJECT_ID',
+        projectId: 'e087e042-d1ec-4b56-82f9-8a8cfe33c3c1',
       },
     },
     splash: {

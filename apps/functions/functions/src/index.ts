@@ -1265,6 +1265,7 @@ export const getPendingInvitations = onCall(
  * Requires OPENAI_API_KEY in Firebase Functions config/environment
  */
 export const getAiRotationSuggestion = onCall(
+  {secrets: ["OPENAI_API_KEY"]},
   async (request): Promise<ApiResponse<AiRotationSuggestionResponse>> => {
     if (!request.auth) {
       throw new HttpsError("unauthenticated", "Must be logged in");
@@ -1495,6 +1496,7 @@ Respond with ONLY valid JSON in this format:
  * AI Toy Recognition from photo
  */
 export const recognizeToyFromPhoto = onCall(
+  {secrets: ["OPENAI_API_KEY"]},
   async (request): Promise<ApiResponse<AiToyRecognitionResponse>> => {
     if (!request.auth) {
       throw new HttpsError("unauthenticated", "Must be logged in");
@@ -1610,6 +1612,7 @@ Respond with ONLY valid JSON.`,
  * AI Space Analysis
  */
 export const analyzeSpace = onCall(
+  {secrets: ["OPENAI_API_KEY"]},
   async (request): Promise<ApiResponse<AiSpaceAnalysisResponse>> => {
     if (!request.auth) {
       throw new HttpsError("unauthenticated", "Must be logged in");
